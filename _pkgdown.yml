@@ -1,16 +1,22 @@
-url: https://janavi-kolpekwar.github.io/sparseVectorpkg/
 template:
   bootstrap: 5
 
-navbar:
-  structure:
-    left: [home, reference, articles]
-    right: [github]
-  components:
-    github:
-      icon: fa-github
-      href: https://github.com/janavi-kolpekwar/sparseVectorpkg
+reference:
+  - title: "Core S4 Class"
+    contents:
+      - sparse_numeric-class
 
-home:
-  title: "sparseVectorpkg"
-  description: "Efficient sparse numeric vector operations using S4 classes in R."
+  - title: "Arithmetic Methods"
+    contents:
+      - sparse_add
+      - sparse_sub
+      - sparse_mult
+      - sparse_crossprod
+
+  - title: "Utility Methods"
+    contents:
+      - density_ratio
+      - mean
+      - norm
+      - standardize
+

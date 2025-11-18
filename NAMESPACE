@@ -1,2 +1,9 @@
-exportPattern("^[[:alpha:]]+")
-
+export(density_ratio)
+export(mean)
+export(norm)
+export(sparse_add)
+export(sparse_crossprod)
+export(sparse_mult)
+export(sparse_sub)
+export(standardize)
+exportClasses(sparse_numeric)
