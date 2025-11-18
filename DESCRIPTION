@@ -1,0 +1,18 @@
+Package: sparseVectorpkg
+Type: Package
+Title: Sparse Numeric Vector Operations
+Version: 0.1.0
+Author: Janavi Kolpekwar
+Maintainer: Janavi Kolpekwar <jak4884@utexas.edu>
+Description: Implements an S4 sparse numeric vector class with support for 
+    arithmetic operations, cross products, means, norms, and standardization.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markup = "markdown")
+RoxygenNote: 7.3.2
+Imports: methods
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+

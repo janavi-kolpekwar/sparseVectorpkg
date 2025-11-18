@@ -1,0 +1,16 @@
+url: https://janavi-kolpekwar.github.io/sparseVectorpkg/
+template:
+  bootstrap: 5
+
+navbar:
+  structure:
+    left: [home, reference, articles]
+    right: [github]
+  components:
+    github:
+      icon: fa-github
+      href: https://github.com/janavi-kolpekwar/sparseVectorpkg
+
+home:
+  title: "sparseVectorpkg"
+  description: "Efficient sparse numeric vector operations using S4 classes in R."
