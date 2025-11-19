@@ -1,18 +1,18 @@
 Package: sparseVectorpkg
-Type: Package
-Title: Sparse Numeric Vector Operations
+Title: Sparse Numeric Vector Tools
+Encoding: UTF-8
 Version: 0.1.0
-Author: Janavi Kolpekwar
-Maintainer: Janavi Kolpekwar <jak4884@utexas.edu>
+Authors@R: 
+    person("Janavi", "Kolpekwar",
+           role = c("aut", "cre"),
+           email = "jak4884@utexas.edu")
 Description: Implements an S4 sparse numeric vector class with support for 
     arithmetic operations, cross products, means, norms, and standardization.
-License: MIT + file LICENSE
-Encoding: UTF-8
-LazyData: true
-Roxygen: list(markup = "markdown")
+Imports:
+    methods,
+    graphics
+License: GPL-3
+URL: https://janavi-kolpekwar.github.io/sparseVectorpkg/, 
+    https://github.com/janavi-kolpekwar/sparseVectorpkg
+BugReports: https://github.com/janavi-kolpekwar/sparseVectorpkg/issues
 RoxygenNote: 7.3.2
-Imports: methods
-Suggests: 
-    testthat (>= 3.0.0)
-Config/testthat/edition: 3
-

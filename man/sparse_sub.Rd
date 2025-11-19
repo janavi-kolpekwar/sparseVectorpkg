@@ -2,10 +2,18 @@
 % Please edit documentation in R/sparse_numeric.R
 \name{sparse_sub}
 \alias{sparse_sub}
-\title{Subtract Two Sparse Numeric Vectors}
+\title{Subtract Sparse Numeric Vectors}
 \usage{
 sparse_sub(x, y, ...)
 }
+\arguments{
+\item{x}{A \code{sparse_numeric} object.}
+
+\item{y}{A \code{sparse_numeric} object.}
+}
+\value{
+A \code{sparse_numeric} representing \code{x - y}.
+}
 \description{
-Element-wise subtraction of two sparse vectors of equal length.
+Subtract Sparse Numeric Vectors
 }

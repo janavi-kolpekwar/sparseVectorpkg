@@ -2,10 +2,17 @@
 % Please edit documentation in R/sparse_numeric.R
 \name{standardize}
 \alias{standardize}
-\title{Standardize a Sparse Vector}
+\title{Standardize a Sparse Numeric Vector}
 \usage{
 standardize(x, ...)
 }
+\arguments{
+\item{x}{A \code{sparse_numeric}.}
+}
+\value{
+A standardized \code{sparse_numeric}.
+}
 \description{
-Subtracts mean and divides by SD.
+Centers and scales a sparse numeric vector without constructing the dense
+version. Zeros are accounted for analytically.
 }

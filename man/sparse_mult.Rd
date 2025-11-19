@@ -2,10 +2,18 @@
 % Please edit documentation in R/sparse_numeric.R
 \name{sparse_mult}
 \alias{sparse_mult}
-\title{Multiply Two Sparse Numeric Vectors}
+\title{Elementwise Multiply Sparse Numeric Vectors}
 \usage{
 sparse_mult(x, y, ...)
 }
+\arguments{
+\item{x}{A \code{sparse_numeric}.}
+
+\item{y}{A \code{sparse_numeric}.}
+}
+\value{
+A \code{sparse_numeric} representing \code{x * y}.
+}
 \description{
-Computes element-wise products only where both vectors have nonzero entries.
+Elementwise Multiply Sparse Numeric Vectors
 }

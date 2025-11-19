@@ -7,13 +7,13 @@
 sparse_add(x, y, ...)
 }
 \arguments{
-\item{x}{A sparse_numeric vector.}
+\item{x}{A \code{sparse_numeric} object.}
 
-\item{y}{A sparse_numeric vector.}
+\item{y}{A \code{sparse_numeric} object.}
 }
 \value{
-A sparse_numeric representing the sum.
+A \code{sparse_numeric} representing \code{x + y}.
 }
 \description{
-Element-wise addition of two sparse vectors of equal length.
+Add Two Sparse Numeric Vectors
 }

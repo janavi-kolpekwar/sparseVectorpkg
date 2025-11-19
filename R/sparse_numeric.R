@@ -1,18 +1,17 @@
-#' @keywords internal
-"_PACKAGE"
+#############################################
+# sparse_numeric Class and Methods
+#############################################
 
-############################################################
-## 1. Class Definition
-############################################################
-
-#' Sparse Numeric Vector (S4 Class)
+#' Sparse Numeric Vector Class
 #'
-#' An S4 class that stores numeric vectors efficiently by keeping
-#' only the nonzero values and their positions.
+#' Represents a sparse numeric vector using only nonzero values and their
+#' positions. Designed to support efficient arithmetic without converting
+#' to dense representations.
 #'
 #' @slot value Numeric vector of nonzero values.
-#' @slot pos Integer vector of positions of the nonzero values.
-#' @slot length Integer giving the full length of the vector.
+#' @slot pos Integer vector of positions of nonzero values.
+#' @slot length Integer giving total length of the vector.
+#'
 #' @export
 setClass(
   Class = "sparse_numeric",
@@ -23,249 +22,295 @@ setClass(
   )
 )
 
-############################################################
-## 2. Validity Method
-############################################################
-
+#' @keywords internal
 setValidity("sparse_numeric", function(object) {
-  if (length(object@value) != length(object@pos))
-    return("Slots 'value' and 'pos' must have the same length.")
-  if (any(object@pos < 1L | object@pos > object@length))
-    return("Slot 'pos' contains indices outside valid range.")
-  if (anyDuplicated(object@pos))
-    return("Slot 'pos' contains duplicate indices.")
+  if (length(object@value) != length(object@pos)) {
+    return("Length of 'value' and 'pos' must match")
+  }
+  if (any(object@pos > object@length) || any(object@pos < 1)) {
+    return("'pos' values must be within [1, length]")
+  }
+  if (any(duplicated(object@pos))) {
+    return("'pos' values must be unique")
+  }
   TRUE
 })
 
-############################################################
-## 3. Coercion Methods
-############################################################
+setOldClass("numeric")
 
+#############################################
+# Coercion
+#############################################
+
+#' Convert Numeric Vector to Sparse Numeric
+#'
+#' Converts a numeric vector into a \code{sparse_numeric} representation.
+#'
+#' @param from A numeric vector.
+#'
+#' @return A \code{sparse_numeric} object.
+#'
 #' @export
+#' @name as_sparse_numeric
+#' @rdname as_sparse_numeric
 setAs("numeric", "sparse_numeric", function(from) {
-  nz <- which(from != 0)
-  new("sparse_numeric",
-      value = from[nz],
-      pos = as.integer(nz),
-      length = as.integer(length(from)))
+  pos <- which(from != 0)
+  value <- from[pos]
+  new("sparse_numeric", value = value, pos = as.integer(pos), length = as.integer(length(from)))
 })
 
+#' Convert Sparse Numeric to Full Numeric
+#'
+#' Converts a \code{sparse_numeric} object back into the full numeric vector.
+#'
+#' @param from A \code{sparse_numeric} object.
+#'
+#' @return A full numeric vector.
+#'
 #' @export
+#' @name as_sparse_numeric
+#' @rdname as_sparse_numeric
 setAs("sparse_numeric", "numeric", function(from) {
   out <- numeric(from@length)
-  if (length(from@pos) > 0L)
-    out[from@pos] <- from@value
+  out[from@pos] = from@value
   out
 })
 
-############################################################
-## 4. Generic Function Definitions
-############################################################
+#############################################
+# Helper
+#############################################
+
+#' @keywords internal
+.check_same_length <- function(x, y) {
+  if (x@length != y@length) stop("Vectors must be of the same length")
+}
+
+#############################################
+# Generics
+#############################################
 
 #' Add Two Sparse Numeric Vectors
 #'
-#' Element-wise addition of two sparse vectors of equal length.
+#' @param x A \code{sparse_numeric} object.
+#' @param y A \code{sparse_numeric} object.
 #'
-#' @param x A sparse_numeric vector.
-#' @param y A sparse_numeric vector.
-#' @return A sparse_numeric representing the sum.
+#' @return A \code{sparse_numeric} representing \code{x + y}.
+#'
 #' @export
+#' @name sparse_add
 setGeneric("sparse_add", function(x, y, ...) standardGeneric("sparse_add"))
 
-#' Subtract Two Sparse Numeric Vectors
+#' Subtract Sparse Numeric Vectors
 #'
-#' Element-wise subtraction of two sparse vectors of equal length.
+#' @param x A \code{sparse_numeric} object.
+#' @param y A \code{sparse_numeric} object.
+#'
+#' @return A \code{sparse_numeric} representing \code{x - y}.
+#'
 #' @export
+#' @name sparse_sub
 setGeneric("sparse_sub", function(x, y, ...) standardGeneric("sparse_sub"))
 
-#' Multiply Two Sparse Numeric Vectors
+#' Elementwise Multiply Sparse Numeric Vectors
 #'
-#' Computes element-wise products only where both vectors have nonzero entries.
+#' @param x A \code{sparse_numeric}.
+#' @param y A \code{sparse_numeric}.
+#'
+#' @return A \code{sparse_numeric} representing \code{x * y}.
+#'
 #' @export
+#' @name sparse_mult
 setGeneric("sparse_mult", function(x, y, ...) standardGeneric("sparse_mult"))
 
 #' Sparse Crossproduct (Dot Product)
 #'
-#' Computes sum(x_i * y_i) for sparse vectors efficiently.
+#' @param x A \code{sparse_numeric}.
+#' @param y A \code{sparse_numeric}.
+#'
+#' @return A numeric scalar.
+#'
 #' @export
+#' @name sparse_crossprod
 setGeneric("sparse_crossprod", function(x, y, ...) standardGeneric("sparse_crossprod"))
 
-#' Compute Density Ratio of Sparse Vector
-#'
-#' Proportion of nonzero entries.
+#############################################
+# Methods
+#############################################
+
 #' @export
-setGeneric("density_ratio", function(x) standardGeneric("density_ratio"))
+setMethod("sparse_add", c("sparse_numeric", "sparse_numeric"), function(x, y) {
+  .check_same_length(x, y)
+  all_pos <- c(x@pos, y@pos)
+  all_val <- c(x@value, y@value)
+  combined <- tapply(all_val, all_pos, sum)
+  pos <- as.integer(names(combined))
+  value <- as.numeric(combined)
+  keep <- which(value != 0)
 
-#' Compute Mean of Sparse Vector
-#'
-#' Calculates mean including implicit zeros.
-#' @export
-setGeneric("mean")
-
-#' Compute Euclidean Norm of Sparse Vector
-#'
-#' Computes sqrt(sum(x_i^2)).
-#' @export
-setGeneric("norm", function(x, ...) standardGeneric("norm"))
-
-#' Standardize a Sparse Vector
-#'
-#' Subtracts mean and divides by SD.
-#' @export
-setGeneric("standardize", function(x, ...) standardGeneric("standardize"))
-
-############################################################
-## 5. Arithmetic Methods
-############################################################
-
-setMethod("sparse_add", c("sparse_numeric", "sparse_numeric"),
-          function(x, y, ...) {
-            if (x@length != y@length)
-              stop("Vectors must have the same length.")
-
-            pos_all <- sort(unique(c(x@pos, y@pos)))
-            val_x <- numeric(length(pos_all))
-            val_y <- numeric(length(pos_all))
-
-            if (length(x@pos) > 0)
-              val_x[match(x@pos, pos_all)] <- x@value
-            if (length(y@pos) > 0)
-              val_y[match(y@pos, pos_all)] <- y@value
-
-            vals <- val_x + val_y
-            nz <- which(vals != 0)
-            new("sparse_numeric",
-                value = vals[nz],
-                pos = as.integer(pos_all[nz]),
-                length = x@length)
-          })
-
-setMethod("sparse_sub", c("sparse_numeric", "sparse_numeric"),
-          function(x, y, ...) {
-            if (x@length != y@length)
-              stop("Vectors must have the same length.")
-
-            pos_all <- sort(unique(c(x@pos, y@pos)))
-            val_x <- numeric(length(pos_all))
-            val_y <- numeric(length(pos_all))
-
-            if (length(x@pos) > 0)
-              val_x[match(x@pos, pos_all)] <- x@value
-            if (length(y@pos) > 0)
-              val_y[match(y@pos, pos_all)] <- y@value
-
-            vals <- val_x - val_y
-            nz <- which(vals != 0)
-            new("sparse_numeric",
-                value = vals[nz],
-                pos = as.integer(pos_all[nz]),
-                length = x@length)
-          })
-
-setMethod("sparse_mult", c("sparse_numeric", "sparse_numeric"),
-          function(x, y, ...) {
-            if (x@length != y@length)
-              stop("Vectors must have the same length.")
-            common <- intersect(x@pos, y@pos)
-            if (length(common) == 0L)
-              return(new("sparse_numeric", value = numeric(0), pos = integer(0), length = x@length))
-
-            x_vals <- x@value[match(common, x@pos)]
-            y_vals <- y@value[match(common, y@pos)]
-            prod_vals <- x_vals * y_vals
-            nz <- which(prod_vals != 0)
-            new("sparse_numeric",
-                value = prod_vals[nz],
-                pos = as.integer(common[nz]),
-                length = x@length)
-          })
-
-setMethod("sparse_crossprod", c("sparse_numeric", "sparse_numeric"),
-          function(x, y, ...) {
-            if (x@length != y@length)
-              stop("Vectors must have the same length.")
-            common <- intersect(x@pos, y@pos)
-            if (length(common) == 0L) return(0)
-            sum(x@value[match(common, x@pos)] * y@value[match(common, y@pos)])
-          })
-
-############################################################
-## 6. Mean, Norm, Standardize Methods
-############################################################
-
-setMethod("mean", "sparse_numeric", function(x, ...) {
-  sum(x@value) / x@length
+  new("sparse_numeric",
+      value = value[keep],
+      pos = pos[keep],
+      length = x@length)
 })
 
+#' @export
+setMethod("sparse_sub", c("sparse_numeric", "sparse_numeric"), function(x, y) {
+  .check_same_length(x, y)
+  all_pos <- union(x@pos, y@pos)
+  vals <- sapply(all_pos, function(p) {
+    xv <- if (p %in% x@pos) x@value[which(x@pos == p)] else 0
+    yv <- if (p %in% y@pos) y@value[which(y@pos == p)] else 0
+    xv - yv
+  })
+  keep <- which(vals != 0)
+
+  new("sparse_numeric",
+      value = vals[keep],
+      pos = as.integer(all_pos[keep]),
+      length = x@length)
+})
+
+#' @export
+setMethod("sparse_mult", c("sparse_numeric", "sparse_numeric"), function(x, y) {
+  .check_same_length(x, y)
+  common <- intersect(x@pos, y@pos)
+  vals <- x@value[match(common, x@pos)] * y@value[match(common, y@pos)]
+  keep <- which(vals != 0)
+
+  new("sparse_numeric",
+      value = vals[keep],
+      pos = as.integer(common[keep]),
+      length = x@length)
+})
+
+#' @export
+setMethod("sparse_crossprod", c("sparse_numeric", "sparse_numeric"), function(x, y) {
+  .check_same_length(x, y)
+  common <- intersect(x@pos, y@pos)
+  sum(x@value[match(common, x@pos)] * y@value[match(common, y@pos)])
+})
+
+#############################################
+# Operator Overloads
+#############################################
+
+#' @export
+setMethod("+", c("sparse_numeric", "sparse_numeric"), function(e1, e2) sparse_add(e1, e2))
+
+#' @export
+setMethod("-", c("sparse_numeric", "sparse_numeric"), function(e1, e2) sparse_sub(e1, e2))
+
+#' @export
+setMethod("*", c("sparse_numeric", "sparse_numeric"), function(e1, e2) sparse_mult(e1, e2))
+
+#############################################
+# Display
+#############################################
+
+#' @export
+setMethod("show", "sparse_numeric", function(object) {
+  cat("Sparse numeric vector of length", object@length, "\n")
+  cat("Non-zero positions:", object@pos, "\n")
+  cat("Values:", object@value, "\n")
+})
+
+#############################################
+# Plotting
+#############################################
+
+#' Plot Sparse Numeric Vectors
+#'
+#' Plots two sparse numeric vectors on the same coordinate axes.
+#'
+#' @param x A \code{sparse_numeric} object.
+#' @param y A \code{sparse_numeric} object.
+#'
+#' @export
+setMethod("plot", c("sparse_numeric", "sparse_numeric"), function(x, y, ...) {
+  plot(x@pos, x@value, col = "blue", pch = 16,
+       xlim = c(1, max(x@length, y@length)),
+       ylim = range(c(x@value, y@value, 0)),
+       xlab = "Index", ylab = "Value", main = "Sparse Numeric Comparison", ...)
+  points(y@pos, y@value, col = "red", pch = 17)
+  legend("topright", legend = c("x", "y"), col = c("blue", "red"), pch = c(16, 17))
+})
+
+#############################################
+# Norms
+#############################################
+
+#' Squared L2 Norm of a Sparse Vector
+#'
+#' @param x A \code{sparse_numeric} object.
+#'
+#' @return Numeric scalar.
+#'
+#' @export
+#' @name sparse_norm2
+setGeneric("sparse_norm2", function(x) standardGeneric("sparse_norm2"))
+
+#' @export
+setMethod("sparse_norm2", "sparse_numeric", function(x) sum(x@value^2))
+
+#' @export
+setGeneric("norm")
+
+#' L2 Norm of a Sparse Vector
+#'
+#' @param x A \code{sparse_numeric}.
+#' @param type Norm type. Only `"2"` supported.
+#'
+#' @return Numeric scalar.
+#'
+#' @export
+#' @name norm_sparse_numeric
 setMethod("norm", "sparse_numeric", function(x, type = "2", ...) {
-  if (type != "2")
-    stop("Only Euclidean norm ('2') supported.")
+  if (type != "2") stop("Only Euclidean norm ('2') is supported")
   sqrt(sum(x@value^2))
 })
 
-setMethod("density_ratio", "sparse_numeric", function(x) {
-  if (x@length == 0L) return(NA_real_)
-  length(x@pos) / x@length
-})
+#############################################
+# Standardization
+#############################################
 
-setMethod("standardize", "sparse_numeric", function(x, ...) {
-  μ <- mean(x)
+#' Standardize a Sparse Numeric Vector
+#'
+#' Centers and scales a sparse numeric vector without constructing the dense
+#' version. Zeros are accounted for analytically.
+#'
+#' @param x A \code{sparse_numeric}.
+#'
+#' @return A standardized \code{sparse_numeric}.
+#'
+#' @export
+#' @name standardize
+setGeneric("standardize", function(x, ...) standardGeneric("standardize"))
+
+#' @export
+setMethod("standardize", "sparse_numeric", function(x) {
+
   n <- x@length
-  var <- (sum((x@value - μ)^2) + (n - length(x@pos)) * μ^2) / n
-  sd_x <- sqrt(var)
+  k <- length(x@pos)
+  m <- mean(x)
 
-  if (sd_x == 0)
-    stop("Standard deviation is zero; cannot standardize.")
+  ss <- sum(x@value^2)
+  var_num <- ss + (n - k) * m^2 - 2 * m * sum(x@value) + k * m^2
+  sd_x <- sqrt(var_num / (n - 1))
 
-  out <- rep((-μ) / sd_x, n)
-  if (length(x@pos) > 0)
-    out[x@pos] <- (x@value - μ) / sd_x
+  if (sd_x == 0) stop("Cannot standardize: standard deviation is zero")
 
-  nz <- which(out != 0)
+  new_vals <- (x@value - m) / sd_x
+  zero_val <- (-m) / sd_x
+
+  adjust <- new_vals - zero_val
+  keep <- which(adjust != 0)
+
   new("sparse_numeric",
-      value = out[nz],
-      pos = as.integer(nz),
-      length = as.integer(n))
+      value = adjust[keep],
+      pos = x@pos[keep],
+      length = x@length)
 })
 
-############################################################
-## 7. Operator Overloads
-############################################################
-
-setMethod("+", c("sparse_numeric", "sparse_numeric"),
-          function(e1, e2) sparse_add(e1, e2))
-
-setMethod("-", c("sparse_numeric", "sparse_numeric"),
-          function(e1, e2) sparse_sub(e1, e2))
-
-setMethod("*", c("sparse_numeric", "sparse_numeric"),
-          function(e1, e2) sparse_mult(e1, e2))
-
-############################################################
-## 8. Show & Plot Methods
-############################################################
-
-setMethod("show", "sparse_numeric", function(object) {
-  cat("Formal class 'sparse_numeric'\n")
-  cat("Length:", object@length, "\n")
-  cat("Nonzero positions:", object@pos, "\n")
-  cat("Nonzero values:", object@value, "\n")
-})
-
-setMethod("plot", c("sparse_numeric", "sparse_numeric"), function(x, y, ...) {
-  plot(x@pos, x@value, col = "blue", pch = 19,
-       xlab = "Index", ylab = "Value", main = "Sparse Vector Comparison", ...)
-  points(y@pos, y@value, col = "red", pch = 17)
-  common <- intersect(x@pos, y@pos)
-  if (length(common) > 0)
-    points(common, x@value[match(common, x@pos)], col = "purple", pch = 15)
-  legend("topright", legend = c("x", "y", "overlap"),
-         col = c("blue", "red", "purple"), pch = c(19, 17, 15))
-})
-
-############################################################
-## End of File
-############################################################
 
 
 

@@ -6,6 +6,14 @@
 \usage{
 sparse_crossprod(x, y, ...)
 }
+\arguments{
+\item{x}{A \code{sparse_numeric}.}
+
+\item{y}{A \code{sparse_numeric}.}
+}
+\value{
+A numeric scalar.
+}
 \description{
-Computes sum(x_i * y_i) for sparse vectors efficiently.
+Sparse Crossproduct (Dot Product)
 }
