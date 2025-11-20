@@ -3,7 +3,7 @@
     "path": "~/sparseVectorpkg/.gitignore",
     "project_path": ".gitignore",
     "type": "gitignore",
-    "hash": "852952723",
+    "hash": "1459623632",
     "contents": "",
     "dirty": false,
     "created": 1763661778904.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "0,0",
+        "cursorPosition": "5,7",
         "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1763662287,
+    "lastKnownWriteTime": 1763662414,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1763662287080,
+    "last_content_update": 1763662414010,
     "read_only": false,
     "read_only_alternatives": []
 }
