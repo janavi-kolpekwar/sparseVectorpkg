@@ -3,7 +3,7 @@
     "path": "~/sparseVectorpkg/DESCRIPTION",
     "project_path": "DESCRIPTION",
     "type": "dcf",
-    "hash": "3737052948",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1763654505414.0,
@@ -12,8 +12,8 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "14,18",
-        "scrollLine": "2"
+        "cursorPosition": "19,0",
+        "scrollLine": "0"
     },
     "folds": "",
     "lastKnownWriteTime": 1763655092,

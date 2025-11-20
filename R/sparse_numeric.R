@@ -114,19 +114,25 @@ setMethod("sparse_sub", c("sparse_numeric", "sparse_numeric"), function(x, y) {
   if (x@length != y@length)
     stop("Vectors must be of same length")
 
-  all_pos <- union(x@pos, y@pos)
+  # consider all positions where either x or y is non-zero
+  all_pos <- sort(union(x@pos, y@pos))
   x_vals <- setNames(x@value, x@pos)
   y_vals <- setNames(y@value, y@pos)
 
-  diff <- sapply(all_pos, function(p) get_val(x_vals, p) - get_val(y_vals, p))
-  non_zero <- diff[diff != 0]
-  valid_idx <- !is.na(non_zero) & !is.na(as.integer(names(non_zero)))
+  diff_vals <- vapply(
+    all_pos,
+    function(p) get_val(x_vals, p) - get_val(y_vals, p),
+    numeric(1)
+  )
+
+  keep <- diff_vals != 0
 
   new("sparse_numeric",
-      value  = as.numeric(non_zero[valid_idx]),
-      pos    = as.integer(names(non_zero)[valid_idx]),
+      value  = as.numeric(diff_vals[keep]),
+      pos    = as.integer(all_pos[keep]),
       length = x@length)
 })
+
 
 #' Elementwise multiplication of sparse_numeric vectors
 #'
@@ -320,6 +326,7 @@ setMethod("standardize", "sparse_numeric", function(x, ...) {
       pos    = as.integer(seq_len(n_int)),
       length = n_int)
 })
+
 
 
 
