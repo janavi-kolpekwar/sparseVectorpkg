@@ -1,4 +1,3 @@
-## HW5_testscript.R
 
 library(testthat)
 

@@ -2,17 +2,22 @@
 % Please edit documentation in R/sparse_numeric.R
 \name{standardize}
 \alias{standardize}
-\title{Standardize a Sparse Numeric Vector}
+\alias{standardize,sparse_numeric-method}
+\title{Standardize a sparse_numeric vector}
 \usage{
 standardize(x, ...)
+
+\S4method{standardize}{sparse_numeric}(x, ...)
 }
 \arguments{
-\item{x}{A \code{sparse_numeric}.}
+\item{x}{A \code{sparse_numeric} vector.}
+
+\item{...}{Ignored.}
 }
 \value{
-A standardized \code{sparse_numeric}.
+A standardized \code{sparse_numeric} vector.
 }
 \description{
-Centers and scales a sparse numeric vector without constructing the dense
-version. Zeros are accounted for analytically.
+Standardizes each element of a \code{sparse_numeric} vector by subtracting
+the mean and dividing by the standard deviation (as in \code{sd()}).
 }

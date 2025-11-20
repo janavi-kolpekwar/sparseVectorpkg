@@ -2,18 +2,21 @@
 % Please edit documentation in R/sparse_numeric.R
 \name{sparse_mult}
 \alias{sparse_mult}
-\title{Elementwise Multiply Sparse Numeric Vectors}
+\alias{sparse_mult,sparse_numeric,sparse_numeric-method}
+\title{Elementwise multiplication of sparse_numeric vectors}
 \usage{
 sparse_mult(x, y, ...)
+
+\S4method{sparse_mult}{sparse_numeric,sparse_numeric}(x, y)
 }
 \arguments{
-\item{x}{A \code{sparse_numeric}.}
+\item{x, y}{Objects of class \code{sparse_numeric}.}
 
-\item{y}{A \code{sparse_numeric}.}
+\item{...}{Further arguments passed to methods (currently ignored).}
 }
 \value{
-A \code{sparse_numeric} representing \code{x * y}.
+A \code{sparse_numeric} vector containing elementwise products.
 }
 \description{
-Elementwise Multiply Sparse Numeric Vectors
+Elementwise multiplication of sparse_numeric vectors
 }

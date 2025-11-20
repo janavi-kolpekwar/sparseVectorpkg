@@ -2,18 +2,21 @@
 % Please edit documentation in R/sparse_numeric.R
 \name{sparse_crossprod}
 \alias{sparse_crossprod}
-\title{Sparse Crossproduct (Dot Product)}
+\alias{sparse_crossprod,sparse_numeric,sparse_numeric-method}
+\title{Sparse crossproduct (dot product)}
 \usage{
 sparse_crossprod(x, y, ...)
+
+\S4method{sparse_crossprod}{sparse_numeric,sparse_numeric}(x, y)
 }
 \arguments{
-\item{x}{A \code{sparse_numeric}.}
+\item{x, y}{Objects of class \code{sparse_numeric}.}
 
-\item{y}{A \code{sparse_numeric}.}
+\item{...}{Further arguments passed to methods (currently ignored).}
 }
 \value{
-A numeric scalar.
+Numeric scalar, the dot product of \code{x} and \code{y}.
 }
 \description{
-Sparse Crossproduct (Dot Product)
+Sparse crossproduct (dot product)
 }

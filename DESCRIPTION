@@ -12,6 +12,7 @@ Imports:
     methods,
     graphics
 License: GPL-3
+Suggests: testthat
 URL: https://janavi-kolpekwar.github.io/sparseVectorpkg/, 
     https://github.com/janavi-kolpekwar/sparseVectorpkg
 BugReports: https://github.com/janavi-kolpekwar/sparseVectorpkg/issues

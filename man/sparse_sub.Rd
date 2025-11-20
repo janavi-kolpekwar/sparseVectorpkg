@@ -2,18 +2,21 @@
 % Please edit documentation in R/sparse_numeric.R
 \name{sparse_sub}
 \alias{sparse_sub}
-\title{Subtract Sparse Numeric Vectors}
+\alias{sparse_sub,sparse_numeric,sparse_numeric-method}
+\title{Elementwise subtraction of sparse_numeric vectors}
 \usage{
 sparse_sub(x, y, ...)
+
+\S4method{sparse_sub}{sparse_numeric,sparse_numeric}(x, y)
 }
 \arguments{
-\item{x}{A \code{sparse_numeric} object.}
+\item{x, y}{Objects of class \code{sparse_numeric}.}
 
-\item{y}{A \code{sparse_numeric} object.}
+\item{...}{Further arguments passed to methods (currently ignored).}
 }
 \value{
-A \code{sparse_numeric} representing \code{x - y}.
+A \code{sparse_numeric} vector containing elementwise differences.
 }
 \description{
-Subtract Sparse Numeric Vectors
+Elementwise subtraction of sparse_numeric vectors
 }

@@ -3,19 +3,17 @@
 \docType{class}
 \name{sparse_numeric-class}
 \alias{sparse_numeric-class}
-\title{Sparse Numeric Vector Class}
+\title{Sparse numeric vector class}
 \description{
-Represents a sparse numeric vector using only nonzero values and their
-positions. Designed to support efficient arithmetic without converting
-to dense representations.
+An S4 class to represent numeric vectors in sparse form.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{value}}{Numeric vector of nonzero values.}
+\item{\code{value}}{Numeric vector of non-zero values.}
 
-\item{\code{pos}}{Integer vector of positions of nonzero values.}
+\item{\code{pos}}{Integer vector of positions (1-based) of non-zero values.}
 
-\item{\code{length}}{Integer giving total length of the vector.}
+\item{\code{length}}{Integer giving the total length of the vector (including zeros).}
 }}
 
