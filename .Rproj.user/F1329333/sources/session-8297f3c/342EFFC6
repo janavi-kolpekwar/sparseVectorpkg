@@ -1,0 +1,24 @@
+{
+    "id": "342EFFC6",
+    "path": "~/sparseVectorpkg/tests/testthat/test-sparse_numeric.R",
+    "project_path": "tests/testthat/test-sparse_numeric.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1763654485340.0,
+    "source_on_save": false,
+    "relative_order": 4,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1763520110,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1763520110,
+    "read_only": false,
+    "read_only_alternatives": []
+}

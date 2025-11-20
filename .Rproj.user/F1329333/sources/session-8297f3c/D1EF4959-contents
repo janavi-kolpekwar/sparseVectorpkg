@@ -1,0 +1,19 @@
+Package: sparseVectorpkg
+Title: Sparse Numeric Vector Tools
+Encoding: UTF-8
+Version: 0.1.0
+Authors@R: 
+    person("Janavi", "Kolpekwar",
+           role = c("aut", "cre"),
+           email = "jak4884@utexas.edu")
+Description: Implements an S4 sparse numeric vector class with support for 
+    arithmetic operations, cross products, means, norms, and standardization.
+Imports:
+    methods,
+    graphics
+License: GPL-3
+Suggests: testthat
+URL: https://janavi-kolpekwar.github.io/sparseVectorpkg/, 
+    https://github.com/janavi-kolpekwar/sparseVectorpkg
+BugReports: https://github.com/janavi-kolpekwar/sparseVectorpkg/issues
+RoxygenNote: 7.3.2
